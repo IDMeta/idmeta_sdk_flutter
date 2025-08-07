@@ -1,0 +1,49 @@
+name: idmeta_sdk_flutter
+description: IDMeta Flutter SDK for identity verification. This is a beta version for initial testing and integration.
+version: 1.0.0
+homepage: https://github.com/C4SI-0
+repository: https://github.com/C4SI-0/idmeta_sdk_flutter.git
+
+environment:
+  sdk: '>=3.2.0 <4.0.0' 
+  flutter: ">=3.16.0"   
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  cupertino_icons: ^1.0.2
+  http: ^1.1.0
+  intl: ^0.19.0
+  provider: ^6.1.2
+  file_picker: ^8.0.0+1
+  image_picker: ^1.0.8
+  camera: ^0.10.5+9
+  dropdown_search: ^5.0.6
+  image: ^4.1.7
+  google_mlkit_face_detection: ^0.10.0
+  google_mlkit_commons: ^0.7.1
+  shimmer: ^3.0.0
+  path_provider: ^2.1.5
+  permission_handler: ^12.0.0+1
+  audioplayers: ^5.2.1
+  record: ^5.0.2
+  blinkid_flutter: ^6.12.0
+  shared_preferences: ^2.5.3
+  qr_code_tools: ^0.2.0
+  mobile_scanner: ^6.0.10
+  package_info_plus: ^8.3.0
+
+dependency_overrides:
+  record_platform_interface: 1.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:
+  assets:
+    - assets/logo.png
+    - assets/checked.png
+    
