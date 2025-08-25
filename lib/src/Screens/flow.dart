@@ -84,6 +84,13 @@ class FlowScreen extends StatelessWidget {
           ],
         ),
         body: _buildBody(context, screenWidget, currentStepKey),
+        floatingActionButton: kDebugMode
+            ? FloatingActionButton(
+                onPressed: () => get.nextScreen(context),
+                tooltip: 'Next Step (Debug)',
+                child: const Icon(Icons.skip_next),
+              )
+            : null,
       ),
     );
   }

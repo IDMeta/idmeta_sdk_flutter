@@ -7,9 +7,7 @@ import '../Verification/verification.dart';
 
 class BiometricCameraView extends StatefulWidget {
   final Function(XFile image) onPictureCaptured;
-
   final VoidCallback? onCaptureFailed;
-
   final double? height;
 
   const BiometricCameraView({
@@ -26,16 +24,13 @@ class BiometricCameraView extends StatefulWidget {
 class BiometricCameraViewState extends State<BiometricCameraView> with WidgetsBindingObserver {
   final _cameraService = FaceCameraService();
   List<StreamSubscription>? _subscriptions;
-
   bool _isCameraInitialized = false;
-
   bool _isCapturing = false;
   bool _isSwitchingCamera = false;
   String _instructionText = '';
   String? _errorText;
   CustomPaint? _customPaint;
   CameraPropertiesState? _cameraProps;
-
   bool get _isInteractionDisabled =>
       _isCapturing || _isSwitchingCamera || context.read<VerificationProvider>().isLoading;
 

@@ -331,17 +331,12 @@ class VerificationRepository {
   }
 
   Future<void> submitQrCode({required Map<String, dynamic> qrPayload}) async {
-    final response = await _apiService.verifyQrCode(
+    await _apiService.verifyQrCode(
       userToken: _flowState.userToken!,
       templateId: _flowState.templateId!,
       verificationId: _flowState.verificationId!,
       qrPayload: qrPayload,
     );
-
-    final bool isValid = response['isValid'] ?? false;
-    if (!isValid) {
-      throw ApiException('QR code could not be validated.', statusCode: 200);
-    }
   }
 
   Future<void> submitPhPrcData({
@@ -379,9 +374,6 @@ class VerificationRepository {
   }
 
   Future<void> verifyEmailOtp({required String otp, required String referenceId}) async {
-    if (otp != referenceId) {
-      throw ApiException("The OTP you entered does not match.", statusCode: 400);
-    }
     await _apiService.emailVerifyOtp(
       userToken: _flowState.userToken!,
       templateId: _flowState.templateId!,

@@ -267,7 +267,6 @@ class FaceCameraService {
   void dispose() {
     _isDisposed = true;
     _canProcess = false;
-
     _controller?.dispose();
     _faceDetector.close();
     _faceDetectionController.close();

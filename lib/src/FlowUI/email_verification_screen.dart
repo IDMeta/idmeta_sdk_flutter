@@ -14,8 +14,8 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   String? _referenceOtp;
 
   final _emailController = TextEditingController();
-  final List<TextEditingController> _otpControllers = List.generate(4, (_) => TextEditingController());
-  final List<FocusNode> _otpFocusNodes = List.generate(4, (_) => FocusNode());
+  final List<TextEditingController> _otpControllers = List.generate(6, (_) => TextEditingController());
+  final List<FocusNode> _otpFocusNodes = List.generate(6, (_) => FocusNode());
 
   @override
   void dispose() {
@@ -52,9 +52,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
   Future<void> _verifyOtp() async {
     final otp = _otpControllers.map((c) => c.text).join();
-    if (otp.length < 4) {
+    if (otp.length < 6) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Please enter the complete 4-digit code.")));
+          .showSnackBar(const SnackBar(content: Text("Please enter the complete 6-digit code.")));
       return;
     }
 
@@ -96,12 +96,12 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     return ListView(
       padding: const EdgeInsets.all(24.0),
       children: [
-        const Text('Enter the 4-digit code sent to your email',
+        const Text('Enter the 6-digit code sent to your email',
             style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
         const SizedBox(height: 32),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: List.generate(4, (index) {
+          children: List.generate(6, (index) {
             return SizedBox(
               width: 50,
               child: TextFormField(
@@ -112,7 +112,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(1)],
                 style: const TextStyle(fontSize: 24),
                 onChanged: (value) {
-                  if (value.isNotEmpty && index < 3) {
+                  if (value.isNotEmpty && index < 5) {
                     _otpFocusNodes[index + 1].requestFocus();
                   } else if (value.isEmpty && index > 0) {
                     _otpFocusNodes[index - 1].requestFocus();
