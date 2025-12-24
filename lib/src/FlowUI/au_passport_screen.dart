@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../Verification/verification.dart';
+import '../verification/verification.dart';
 
 const List<String> genderOptions = ['Male', 'Female', 'Not specified'];
 
@@ -24,7 +24,7 @@ class _AuPassportScreenState extends State<AuPassportScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final get = context.read<VerificationProvider>();
+      final get = context.read<Verification>();
       final data = get.flowState.collectedData;
 
       _lastNameController.text = data['lastName'] ?? '';
@@ -68,7 +68,7 @@ class _AuPassportScreenState extends State<AuPassportScreen> {
     if (_selectedGender == 'Male') genderApiValue = 'M';
     if (_selectedGender == 'Female') genderApiValue = 'F';
 
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
     final success = await get.submitAuPassportData(
       context,
       lastName: _lastNameController.text,
@@ -92,7 +92,7 @@ class _AuPassportScreenState extends State<AuPassportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = context.watch<VerificationProvider>().isLoading;
+    final isLoading = context.watch<Verification>().isLoading;
     final theme = Theme.of(context);
 
     return Form(
@@ -150,10 +150,8 @@ class _AuPassportScreenState extends State<AuPassportScreen> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(50)),
             onPressed: isLoading ? null : _submitForm,
-            child: isLoading
-                ? const SizedBox(
-                    height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 3, color: Colors.white))
-                : const Text('Next'),
+            child:
+                isLoading ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 3, color: Colors.white)) : const Text('Next'),
           ),
         ],
       ),

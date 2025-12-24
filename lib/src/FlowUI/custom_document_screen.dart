@@ -3,7 +3,7 @@ import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../Verification/verification.dart';
+import '../verification/verification.dart';
 
 enum UploadMode { file, camera }
 
@@ -93,12 +93,11 @@ class _CustomDocumentScreenState extends State<CustomDocumentScreen> with Widget
     }
 
     if (fileToSubmit == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Please select a file or capture an image.")));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a file or capture an image.")));
       return;
     }
 
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
     final success = await get.submitCustomDocument(context, documentFile: fileToSubmit);
     if (!mounted) return;
     if (success) {
@@ -156,8 +155,7 @@ class _CustomDocumentScreenState extends State<CustomDocumentScreen> with Widget
   }
 
   Widget _buildFileUploadView() {
-    final isImage =
-        _selectedFile != null && ['jpg', 'jpeg', 'png'].contains(_selectedFile!.path.split('.').last.toLowerCase());
+    final isImage = _selectedFile != null && ['jpg', 'jpeg', 'png'].contains(_selectedFile!.path.split('.').last.toLowerCase());
     return Column(
       children: [
         OutlinedButton.icon(
@@ -173,8 +171,7 @@ class _CustomDocumentScreenState extends State<CustomDocumentScreen> with Widget
                 : ListTile(
                     leading: const Icon(Icons.insert_drive_file),
                     title: Text(_selectedFile!.path.split('/').last),
-                    trailing: IconButton(
-                        icon: const Icon(Icons.close), onPressed: () => setState(() => _selectedFile = null)),
+                    trailing: IconButton(icon: const Icon(Icons.close), onPressed: () => setState(() => _selectedFile = null)),
                   ),
           ),
       ],

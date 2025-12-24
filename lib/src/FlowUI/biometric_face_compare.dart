@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import '../Verification/verification.dart';
+import '../verification/verification.dart';
 
 class BioFaceCompareScreen extends StatefulWidget {
   const BioFaceCompareScreen({super.key});
@@ -23,7 +23,7 @@ class _BioFaceCompareScreenState extends State<BioFaceCompareScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final get = context.read<VerificationProvider>();
+      final get = context.read<Verification>();
       final collectedData = get.flowState.collectedData;
 
       final documentFaceBase64 = collectedData['faceImageBase64'] as String?;
@@ -62,9 +62,7 @@ class _BioFaceCompareScreenState extends State<BioFaceCompareScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              image is XFile
-                  ? Image.file(File(image.path), fit: BoxFit.contain)
-                  : Image.memory(image as Uint8List, fit: BoxFit.contain),
+              image is XFile ? Image.file(File(image.path), fit: BoxFit.contain) : Image.memory(image as Uint8List, fit: BoxFit.contain),
               TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Close')),
             ],
           ),
@@ -90,7 +88,7 @@ class _BioFaceCompareScreenState extends State<BioFaceCompareScreen> {
       return;
     }
 
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
 
     final success = await get.submitFaceCompare(
       context,
@@ -112,7 +110,7 @@ class _BioFaceCompareScreenState extends State<BioFaceCompareScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final get = context.watch<VerificationProvider>();
+    final get = context.watch<Verification>();
     final isLoading = get.isLoading;
     final settings = get.designSettings?.settings;
 
@@ -147,8 +145,7 @@ class _BioFaceCompareScreenState extends State<BioFaceCompareScreen> {
                 style: buttonStyle,
                 onPressed: isLoading ? null : _submit,
                 child: isLoading
-                    ? const Center(
-                        child: SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white)))
+                    ? const Center(child: SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white)))
                     : const Text('Next', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
               ),
             ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import '../Verification/verification.dart';
+import '../verification/verification.dart';
 
 const List<(String, String)> genderOptions = [
   ('Any', 'any'),
@@ -26,7 +26,7 @@ class _AmlVerificationScreenState extends State<AmlVerificationScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final get = context.read<VerificationProvider>();
+      final get = context.read<Verification>();
       final prefilledData = get.flowState.collectedData;
       _nameController.text = prefilledData['fullName'] ?? prefilledData['firstName'] ?? '';
       _dobController.text = prefilledData['dob'] ?? '';
@@ -62,7 +62,7 @@ class _AmlVerificationScreenState extends State<AmlVerificationScreen> {
       return;
     }
 
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
 
     final success = await get.submitAmlData(
       context,
@@ -85,7 +85,7 @@ class _AmlVerificationScreenState extends State<AmlVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = context.watch<VerificationProvider>().isLoading;
+    final isLoading = context.watch<Verification>().isLoading;
 
     return Form(
       key: _formKey,
@@ -105,7 +105,7 @@ class _AmlVerificationScreenState extends State<AmlVerificationScreen> {
             decoration: InputDecoration(
               labelText: 'Date of Birth (Optional)',
               hintText: 'YYYY-MM-DD',
-              suffixIcon: Icon(Icons.calendar_today, color: Theme.of(context).primaryColor),
+              suffixIcon: Icon(Icons.calendar_today, color: Theme.of(context).colorScheme.secondary),
             ),
           ),
           const SizedBox(height: 24),
@@ -120,10 +120,8 @@ class _AmlVerificationScreenState extends State<AmlVerificationScreen> {
           const SizedBox(height: 48),
           ElevatedButton(
             onPressed: isLoading ? null : _submitForm,
-            child: isLoading
-                ? const SizedBox(
-                    height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 3, color: Colors.white))
-                : const Text('Next'),
+            child:
+                isLoading ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 3, color: Colors.white)) : const Text('Next'),
           ),
         ],
       ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../Verification/verification.dart';
+import '../verification/verification.dart';
 
 class PhNationalPoliceScreen extends StatefulWidget {
   const PhNationalPoliceScreen({super.key});
@@ -23,7 +23,7 @@ class _PhNationalPoliceScreenState extends State<PhNationalPoliceScreen> {
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
     final success = await get.submitPhNationalPolice(
       context,
       surname: _surnameController.text,

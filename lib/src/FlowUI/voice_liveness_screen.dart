@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:record/record.dart';
 import 'package:audioplayers/audioplayers.dart';
 
-import '../Verification/verification.dart';
+import '../verification/verification.dart';
 
 class VoiceLivenessScreen extends StatefulWidget {
   const VoiceLivenessScreen({super.key});
@@ -77,7 +77,7 @@ class _VoiceLivenessScreenState extends State<VoiceLivenessScreen> {
       return;
     }
 
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
     final success = await get.submitVoiceLiveness(context, audioFile: File(_audioPath!));
 
     if (!mounted) return;
@@ -114,13 +114,18 @@ class _VoiceLivenessScreenState extends State<VoiceLivenessScreen> {
   }
 
   Widget _buildRecordingControls() {
+    final theme = Theme.of(context);
     return Column(
       children: [
         if (_isRecording) Text(_formatDuration(_recordingDuration), style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
         FloatingActionButton.large(
           onPressed: _toggleRecording,
-          child: Icon(_isRecording ? Icons.stop : Icons.mic, size: 48),
+          child: Icon(
+            _isRecording ? Icons.stop : Icons.mic,
+            size: 48,
+            color: theme.colorScheme.secondary,
+          ),
         ),
         const SizedBox(height: 16),
         if (_audioPath != null && !_isRecording)
@@ -128,11 +133,13 @@ class _VoiceLivenessScreenState extends State<VoiceLivenessScreen> {
             IconButton(
                 icon: const Icon(Icons.play_circle_fill),
                 iconSize: 40,
+                color: theme.colorScheme.secondary,
                 onPressed: _playRecording,
                 tooltip: 'Play Recording'),
             IconButton(
                 icon: const Icon(Icons.delete),
                 iconSize: 40,
+                color: theme.colorScheme.secondary,
                 onPressed: () => setState(() => _audioPath = null),
                 tooltip: 'Delete and Re-record'),
           ]),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:idmeta_sdk_flutter/src/verification/verification.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
-import '../Verification/verification.dart';
 
 enum PrcVerificationType { byName, byLicence }
 
@@ -14,6 +13,7 @@ class PhPrcScreen extends StatefulWidget {
 
 class _PhPrcScreenState extends State<PhPrcScreen> {
   final _formKey = GlobalKey<FormState>();
+
   final _professionController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
@@ -21,6 +21,21 @@ class _PhPrcScreenState extends State<PhPrcScreen> {
   final _dobController = TextEditingController();
 
   PrcVerificationType _verificationType = PrcVerificationType.byName;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final get = context.read<Verification>();
+      final prefilledData = get.flowState.collectedData;
+
+      _professionController.text = prefilledData['profession'] ?? '';
+      _firstNameController.text = prefilledData['firstName'] ?? '';
+      _lastNameController.text = prefilledData['lastName'] ?? '';
+      _licenceController.text = prefilledData['docNumber'] ?? '';
+      _dobController.text = prefilledData['dob'] ?? '';
+    });
+  }
 
   @override
   void dispose() {
@@ -43,7 +58,7 @@ class _PhPrcScreenState extends State<PhPrcScreen> {
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
     final success = await get.submitPhPrcData(
       context,
       profession: _professionController.text,
@@ -116,7 +131,7 @@ class _PhPrcScreenState extends State<PhPrcScreen> {
               onTap: _selectDate,
               decoration: InputDecoration(
                 labelText: 'Date of Birth*',
-                suffixIcon: Icon(Icons.calendar_today, color: Theme.of(context).primaryColor),
+                suffixIcon: Icon(Icons.calendar_today, color: Theme.of(context).colorScheme.secondary),
               ),
               validator: (v) => (v?.isEmpty ?? true) ? 'Date of Birth is required.' : null,
             ),

@@ -10,7 +10,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../Verification/verification.dart';
+import '../verification/verification.dart';
 
 class DocumentVerificationScreen extends StatefulWidget {
   const DocumentVerificationScreen({super.key});
@@ -36,7 +36,7 @@ class _DocumentVerificationScreenState extends State<DocumentVerificationScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final isManual = context.read<VerificationProvider>().flowState.isDocumentVerificationManualScan;
+      final isManual = context.read<Verification>().flowState.isDocumentVerificationManualScan;
       if (isManual) {
         setState(() => _isInitializing = false);
       } else {
@@ -47,11 +47,10 @@ class _DocumentVerificationScreenState extends State<DocumentVerificationScreen>
 
   Future<void> _startScan() async {
     setState(() => _isInitializing = true);
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
     final isMultiSide = get.flowState.isDocumentVerificationMultiSide;
 
-    final ScanResult? result =
-        isMultiSide ? await _scannerService.scanMultiSideDocument() : await _scannerService.scanSingleSideDocument();
+    final ScanResult? result = isMultiSide ? await _scannerService.scanMultiSideDocument() : await _scannerService.scanSingleSideDocument();
 
     if (mounted && result != null) {
       setState(() {
@@ -104,7 +103,7 @@ class _DocumentVerificationScreenState extends State<DocumentVerificationScreen>
       return;
     }
 
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
     final success = await get.submitDocument(context, front: _apiFrontImage!, back: _apiBackImage);
     if (!mounted) return;
     if (success) {
@@ -115,7 +114,7 @@ class _DocumentVerificationScreenState extends State<DocumentVerificationScreen>
   }
 
   Future<void> _submitScanned(File front, File? back) async {
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
 
     final success = await get.submitDocument(context, front: front, back: back);
     if (!mounted) return;
@@ -164,7 +163,7 @@ class _DocumentVerificationScreenState extends State<DocumentVerificationScreen>
 
   @override
   Widget build(BuildContext context) {
-    final get = context.watch<VerificationProvider>();
+    final get = context.watch<Verification>();
     final isLoading = get.isLoading;
     final isManualScan = get.flowState.isDocumentVerificationManualScan;
     final isMultiSide = get.flowState.isDocumentVerificationMultiSide;
@@ -230,12 +229,7 @@ class _DocumentVerificationScreenState extends State<DocumentVerificationScreen>
     );
   }
 
-  Widget buildImageSection(
-      {required String title,
-      required int imageNumber,
-      required File? image,
-      required double rotationAngle,
-      required bool isManual}) {
+  Widget buildImageSection({required String title, required int imageNumber, required File? image, required double rotationAngle, required bool isManual}) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -285,10 +279,7 @@ class _DocumentVerificationScreenState extends State<DocumentVerificationScreen>
                 height: 75,
                 width: 100,
                 margin: const EdgeInsets.symmetric(vertical: 20),
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade400)),
+                decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey.shade400)),
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -361,8 +352,7 @@ class DocumentScannerService {
         ..returnFullDocumentImage = true
         ..saveCameraFrames = true;
       BlinkIdOverlaySettings settings = BlinkIdOverlaySettings();
-      var results = await MicroblinkScanner.scanWithCamera(
-          RecognizerCollection([idRecognizer]), settings, await _getLicenseKey());
+      var results = await MicroblinkScanner.scanWithCamera(RecognizerCollection([idRecognizer]), settings, await _getLicenseKey());
       if (results.isEmpty) return null;
       for (var result in results) {
         if (result is BlinkIdMultiSideRecognizerResult) {
@@ -378,11 +368,7 @@ class DocumentScannerService {
             displayBack = await _base64ToFile(result.fullDocumentBackImage!, "display_back.jpg");
             apiBack = await _base64ToFile(result.backCameraFrame!, "api_back.jpg");
           }
-          return ScanResult(
-              displayImageFront: displayFront,
-              apiImageFront: apiFront,
-              displayImageBack: displayBack,
-              apiImageBack: apiBack);
+          return ScanResult(displayImageFront: displayFront, apiImageFront: apiFront, displayImageBack: displayBack, apiImageBack: apiBack);
         }
       }
       return null;
@@ -397,8 +383,7 @@ class DocumentScannerService {
         ..returnFullDocumentImage = true
         ..saveCameraFrames = true;
       BlinkIdOverlaySettings settings = BlinkIdOverlaySettings();
-      var results = await MicroblinkScanner.scanWithCamera(
-          RecognizerCollection([idRecognizer]), settings, await _getLicenseKey());
+      var results = await MicroblinkScanner.scanWithCamera(RecognizerCollection([idRecognizer]), settings, await _getLicenseKey());
       if (results.isEmpty) return null;
       for (var result in results) {
         if (result is BlinkIdSingleSideRecognizerResult) {

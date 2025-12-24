@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../Verification/verification.dart';
+import '../verification/verification.dart';
 
 class SmsVerificationScreen extends StatefulWidget {
   const SmsVerificationScreen({super.key});
@@ -14,8 +14,8 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
   bool _isOtpSent = false;
   String? _referenceId;
 
-  final _phoneController = TextEditingController(text: "1234567890");
-  final _countryCodeController = TextEditingController(text: "+62");
+  final _phoneController = TextEditingController(text: "");
+  final _countryCodeController = TextEditingController(text: "");
   final List<TextEditingController> _otpControllers = List.generate(6, (_) => TextEditingController());
   final List<FocusNode> _otpFocusNodes = List.generate(6, (_) => FocusNode());
 
@@ -38,7 +38,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
       return;
     }
 
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
     final refId = await get.sendSmsOtp(
       context,
       phoneNumber: _phoneController.text,
@@ -63,12 +63,11 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
   Future<void> _verifyOtp() async {
     final otp = _otpControllers.map((c) => c.text).join();
     if (otp.length < 6) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Please enter the complete 6-digit code.")));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please enter the complete 6-digit code.")));
       return;
     }
 
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
     final success = await get.verifySmsOtp(context, otp: otp, referenceId: _referenceId!);
     if (!mounted) return;
 
@@ -115,8 +114,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
     return ListView(
       padding: const EdgeInsets.all(24.0),
       children: [
-        const Text('Enter the 6-digit code sent to your phone',
-            style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+        const Text('Enter the 6-digit code sent to your phone', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
         const SizedBox(height: 32),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

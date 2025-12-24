@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import '../Verification/verification.dart';
+import '../verification/verification.dart';
 
 class EmailVerificationScreen extends StatefulWidget {
   const EmailVerificationScreen({super.key});
@@ -36,7 +36,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       return;
     }
 
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
     final refOtp = await get.sendEmailOtp(context, email: email);
 
     if (refOtp != null) {
@@ -53,12 +53,11 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   Future<void> _verifyOtp() async {
     final otp = _otpControllers.map((c) => c.text).join();
     if (otp.length < 6) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Please enter the complete 6-digit code.")));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please enter the complete 6-digit code.")));
       return;
     }
 
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
     final success = await get.verifyEmailOtp(context, otp: otp, referenceId: _referenceOtp!);
 
     if (mounted && success) {
@@ -96,8 +95,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     return ListView(
       padding: const EdgeInsets.all(24.0),
       children: [
-        const Text('Enter the 6-digit code sent to your email',
-            style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+        const Text('Enter the 6-digit code sent to your email', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
         const SizedBox(height: 32),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

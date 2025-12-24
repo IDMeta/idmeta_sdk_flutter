@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../Verification/verification.dart';
+import '../verification/verification.dart';
 import '../widgets/biometric_camera_view.dart';
 
 class BiometricRegistrationScreen extends StatefulWidget {
@@ -20,7 +20,7 @@ class _BiometricRegistrationScreenState extends State<BiometricRegistrationScree
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final get = context.read<VerificationProvider>();
+      final get = context.read<Verification>();
       final collectedData = get.flowState.collectedData;
       _usernameController.text = collectedData['fullName'] ?? collectedData['firstName'] ?? '';
     });
@@ -35,7 +35,7 @@ class _BiometricRegistrationScreenState extends State<BiometricRegistrationScree
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate() || _capturedImage == null) return;
 
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
     final success = await get.submitBiometricRegistration(
       context,
       username: _usernameController.text,
@@ -60,7 +60,7 @@ class _BiometricRegistrationScreenState extends State<BiometricRegistrationScree
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = context.watch<VerificationProvider>().isLoading;
+    final isLoading = context.watch<Verification>().isLoading;
     return Form(
       key: _formKey,
       child: Column(

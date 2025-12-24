@@ -4,8 +4,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_tools/qr_code_tools.dart';
-import '../Verification/verification.dart';
-import 'Utils/scanner.dart';
+import '../verification/verification.dart';
+import 'utils/scanner.dart';
 
 class QrVerificationScreen extends StatefulWidget {
   const QrVerificationScreen({super.key});
@@ -69,7 +69,7 @@ class _QrVerificationScreenState extends State<QrVerificationScreen> {
       return;
     }
 
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
     final success = await get.submitQrCode(context, qrPayload: _decodedQrData!);
     if (!mounted) return;
 

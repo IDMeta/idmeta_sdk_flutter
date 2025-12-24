@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../Verification/verification.dart';
+import '../verification/verification.dart';
 
 class PhSocialSecurityScreen extends StatefulWidget {
   const PhSocialSecurityScreen({super.key});
@@ -18,7 +18,7 @@ class _PhSocialSecurityScreenState extends State<PhSocialSecurityScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final get = context.read<VerificationProvider>();
+      final get = context.read<Verification>();
 
       final prefilledData = get.flowState.collectedData['docNumber'] ?? '';
       _sssController.text = prefilledData;
@@ -36,7 +36,7 @@ class _PhSocialSecurityScreenState extends State<PhSocialSecurityScreen> {
       return;
     }
 
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
     final success = await get.submitPhSocialSecurityData(
       context,
       sssNumber: _sssController.text,
@@ -56,7 +56,7 @@ class _PhSocialSecurityScreenState extends State<PhSocialSecurityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = context.watch<VerificationProvider>().isLoading;
+    final isLoading = context.watch<Verification>().isLoading;
     return Form(
       key: _formKey,
       child: ListView(
@@ -71,10 +71,8 @@ class _PhSocialSecurityScreenState extends State<PhSocialSecurityScreen> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(50)),
             onPressed: isLoading ? null : _submitForm,
-            child: isLoading
-                ? const SizedBox(
-                    height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 3, color: Colors.white))
-                : const Text('Next'),
+            child:
+                isLoading ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 3, color: Colors.white)) : const Text('Next'),
           ),
         ],
       ),

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import '../Verification/verification.dart';
+import '../verification/verification.dart';
 
 class DukcapilFaceMatchScreen extends StatefulWidget {
   const DukcapilFaceMatchScreen({super.key});
@@ -29,7 +29,7 @@ class _DukcapilFaceMatchScreenState extends State<DukcapilFaceMatchScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final get = context.read<VerificationProvider>();
+      final get = context.read<Verification>();
       final prefilledData = get.flowState.collectedData;
 
       _nameController.text = prefilledData['fullName'] ?? prefilledData['firstName'] ?? '';
@@ -105,7 +105,7 @@ class _DukcapilFaceMatchScreenState extends State<DukcapilFaceMatchScreen> {
       return;
     }
 
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
     final success = await get.submitDukcapilFaceMatchData(
       context,
       name: _nameController.text,
@@ -124,14 +124,13 @@ class _DukcapilFaceMatchScreenState extends State<DukcapilFaceMatchScreen> {
     if (success) {
       get.nextScreen(context);
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(get.errorMessage ?? 'Dukcapil Face Match failed.')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(get.errorMessage ?? 'Dukcapil Face Match failed.')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = context.watch<VerificationProvider>().isLoading;
+    final isLoading = context.watch<Verification>().isLoading;
     final theme = Theme.of(context);
 
     return Form(
@@ -174,10 +173,8 @@ class _DukcapilFaceMatchScreenState extends State<DukcapilFaceMatchScreen> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(50)),
             onPressed: isLoading ? null : _submitForm,
-            child: isLoading
-                ? const SizedBox(
-                    height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 3, color: Colors.white))
-                : const Text('Next'),
+            child:
+                isLoading ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 3, color: Colors.white)) : const Text('Next'),
           ),
         ],
       ),
@@ -231,9 +228,7 @@ class _DukcapilFaceMatchScreenState extends State<DukcapilFaceMatchScreen> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: image is File
-                ? Image.file(image, height: 200, fit: BoxFit.cover)
-                : Image.memory(image as Uint8List, height: 200, fit: BoxFit.cover),
+            child: image is File ? Image.file(image, height: 200, fit: BoxFit.cover) : Image.memory(image as Uint8List, height: 200, fit: BoxFit.cover),
           ),
           const SizedBox(height: 8),
           if (isFromDocument)

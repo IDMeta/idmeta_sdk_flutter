@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import '../Verification/verification.dart';
+import '../verification/verification.dart';
 
 class PhDrivingLicenseScreen extends StatefulWidget {
   const PhDrivingLicenseScreen({super.key});
@@ -20,7 +20,7 @@ class _PhDrivingLicenseScreenState extends State<PhDrivingLicenseScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final get = context.read<VerificationProvider>();
+      final get = context.read<Verification>();
       final prefilledData = get.flowState.collectedData;
 
       _licenseController.text = prefilledData['docNumber'] ?? '';
@@ -63,7 +63,7 @@ class _PhDrivingLicenseScreenState extends State<PhDrivingLicenseScreen> {
       return;
     }
 
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
     final success = await get.submitPhDrivingLicenseData(
       context,
       licenseNumber: _licenseController.text,
@@ -85,7 +85,7 @@ class _PhDrivingLicenseScreenState extends State<PhDrivingLicenseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = context.watch<VerificationProvider>().isLoading;
+    final isLoading = context.watch<Verification>().isLoading;
     final theme = Theme.of(context);
 
     return Form(
@@ -119,10 +119,8 @@ class _PhDrivingLicenseScreenState extends State<PhDrivingLicenseScreen> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(50)),
             onPressed: isLoading ? null : _submitForm,
-            child: isLoading
-                ? const SizedBox(
-                    height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 3, color: Colors.white))
-                : const Text('Next'),
+            child:
+                isLoading ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 3, color: Colors.white)) : const Text('Next'),
           ),
         ],
       ),

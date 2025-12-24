@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../Verification/verification.dart';
+import '../verification/verification.dart';
 
 class PhNbiClearanceScreen extends StatefulWidget {
   const PhNbiClearanceScreen({super.key});
@@ -21,7 +21,7 @@ class _PhNbiClearanceScreenState extends State<PhNbiClearanceScreen> {
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final get = context.read<VerificationProvider>();
+    final get = context.read<Verification>();
     final success = await get.submitPhNbiClearance(context, clearanceNo: _clearanceController.text);
 
     if (!mounted) return;
